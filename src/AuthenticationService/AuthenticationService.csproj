@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <PublishAot>false</PublishAot>
+	  <PublishReadyToRun>true</PublishReadyToRun>
+  </PropertyGroup>
+
+  <ItemGroup>
+		<ProjectReference Include="..\..\AspNetCore\Endpoint\AspNetCore.Endpoint.csproj" />
+		<ProjectReference Include="..\..\AspNetCore\Logging\Logging\AspNetCore.Logging.csproj" />
+		<ProjectReference Include="..\..\AspNetCore\Authentication\Authentication\AspNetCore.Authentication.csproj" />
+    <ProjectReference Include="..\..\Authentication\OpenIdConnect\Keycloak\Authentication.OpenIdConnect.Keycloak.csproj" />
+		<ProjectReference Include="..\..\Configuration\Configuration\Configuration.csproj" />
+    <ProjectReference Include="..\..\AspNetCore\CORS\AspNetCore.CORS.csproj" />
+  </ItemGroup>
+</Project>
