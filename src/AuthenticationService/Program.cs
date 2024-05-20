@@ -1,5 +1,9 @@
 using Auriga.Toolkit.AspNetCore.Extensions;
+using Microsoft.IdentityModel.Logging;
 
-WebApplication.CreateSlimBuilder(args)
-	.BuildApplication()
-	.Run();
+WebApplication app = WebApplication.CreateSlimBuilder(args)
+	.BuildApplication();
+
+IdentityModelEventSource.ShowPII = true;
+
+app.Run();
