@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Auriga.Toolkit.AspNetCore.Authentication.Abstractions.Models;
+using Auriga.Servicekit.AuthenticationService.Domain.Models;
 
 [JsonSerializable(typeof(AuthResponseModel))]
 [JsonSerializable(typeof(string))]

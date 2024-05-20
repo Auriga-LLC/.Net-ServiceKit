@@ -2,15 +2,12 @@ using Keycloak.Plugin.Abstractions.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Auriga.Toolkit.AspNetCore.Authentication.Abstractions;
-using Auriga.Toolkit.AspNetCore.Authentication.Abstractions.Configuration;
+using Auriga.Toolkit.AspNetCore.Authentication;
 using Auriga.Toolkit.Authentication.OpenIdConnect;
-using Auriga.Toolkit.Authentication.OpenIdConnect.Keycloak;
-using Auriga.Toolkit.Authentication.OpenIdConnect.Keycloak.Models;
 using Auriga.Servicekit.AuthenticationService.Domain.Extensions;
-using Auriga.Toolkit.Http.Abstractions.Enums;
-using Auriga.Toolkit.Logging.Abstractions;
-using Auriga.Toolkit.Runtime.Abstractions;
+using Auriga.Toolkit.Http;
+using Auriga.Toolkit.Logging;
+using Auriga.Toolkit.Runtime;
 
 namespace Auriga.Servicekit.AuthenticationService.Controllers;
 
@@ -37,7 +34,7 @@ internal sealed class AuthenticationController
 			return Results.BadRequest(nameof(redirectUri));
 		}
 
-		Operation<string> result = await provider.GetLoginPageUrlAsync(redirectUri, state);
+		OperationContext<string> result = await provider.GetLoginPageUrlAsync(redirectUri, state);
 		if (result.Result == null)
 		{
 			logger.LogMethodFailedWithErrors(nameof(provider.GetLoginPageUrlAsync), result.Errors);
@@ -72,7 +69,7 @@ internal sealed class AuthenticationController
 			return Results.Unauthorized();
 		}
 
-		Operation<OpenIdConnectTokenResponseModel?> tokenRequestOperation = await provider.ExchangeUserPasswordForTokenAsync(userId, userSecret, context.RequestAborted);
+		OperationContext<OpenIdConnectTokenResponseModel?> tokenRequestOperation = await provider.ExchangeUserPasswordForTokenAsync(userId, userSecret, context.RequestAborted);
 		if (tokenRequestOperation.Result == null)
 		{
 			logger.LogMethodFailedWithErrors(nameof(provider.ExchangeUserPasswordForTokenAsync), tokenRequestOperation.Errors);
@@ -117,7 +114,7 @@ internal sealed class AuthenticationController
 			return Results.BadRequest(nameof(redirectUri));
 		}
 
-		Operation<OpenIdConnectTokenResponseModel?> tokenExchangeOperation = await provider.ExchangeCodeForTokenAsync(redirectUri, code, context.RequestAborted);
+		OperationContext<OpenIdConnectTokenResponseModel?> tokenExchangeOperation = await provider.ExchangeCodeForTokenAsync(redirectUri, code, context.RequestAborted);
 		if (tokenExchangeOperation.Result == null)
 		{
 			logger.LogMethodFailedWithErrors(nameof(provider.ExchangeCodeForTokenAsync), tokenExchangeOperation.Errors);
@@ -155,7 +152,7 @@ internal sealed class AuthenticationController
 			return Results.Unauthorized();
 		}
 
-		Operation<OpenIdConnectTokenResponseModel?> tokenRefreshOperation = await provider.ExchangeRefreshTokenAsync(userSplitSecret.RefreshToken, context.RequestAborted);
+		OperationContext<OpenIdConnectTokenResponseModel?> tokenRefreshOperation = await provider.ExchangeRefreshTokenAsync(userSplitSecret.RefreshToken, context.RequestAborted);
 		if (tokenRefreshOperation.Result == null)
 		{
 			logger.LogMethodFailedWithErrors(nameof(provider.ExchangeRefreshTokenAsync), tokenRefreshOperation.Errors);
@@ -207,7 +204,7 @@ internal sealed class AuthenticationController
 			return Results.BadRequest(nameof(state));
 		}
 
-		Operation result = await provider.LogoutAsync(userSplitSecret.RefreshToken, redirectUri, state, context.RequestAborted);
+		OperationContext result = await provider.LogoutAsync(userSplitSecret.RefreshToken, redirectUri, state, context.RequestAborted);
 		if (result.IsSucceed)
 		{
 			context.Response.Headers.Location = context.Request.GetRedirectUrl(redirectUri).AbsoluteUri;
@@ -243,7 +240,7 @@ internal sealed class AuthenticationController
 			return Results.BadRequest(nameof(userSplitSecret.RefreshToken));
 		}
 
-		Operation result = await provider.RevokeClientSessionAsync(userSplitSecret.RefreshToken, context.RequestAborted);
+		OperationContext result = await provider.RevokeClientSessionAsync(userSplitSecret.RefreshToken, context.RequestAborted);
 		if (result.IsSucceed)
 		{
 			context.Response.Headers.Location = context.Request.GetRedirectUrl(redirectUri).AbsoluteUri;
@@ -268,7 +265,7 @@ internal sealed class AuthenticationController
 		HttpContext context,
 		SplitSecret userSplitSecret)
 	{
-		Operation<UserInfoResponseModel?> result = await provider.GetUserInfoAsync(userSplitSecret.AuthenticationHeader, context.RequestAborted);
+		OperationContext<UserInfoResponseModel?> result = await provider.GetUserInfoAsync(userSplitSecret.AuthenticationHeader, context.RequestAborted);
 		return result.IsSucceed ?
 			TypedResults.Ok(result.Result)
 			: TypedResults.BadRequest(result.Errors);

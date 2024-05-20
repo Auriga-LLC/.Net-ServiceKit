@@ -1,16 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
-  <PropertyGroup>
-    <InvariantGlobalization>true</InvariantGlobalization>
-    <PublishAot>false</PublishAot>
-	  <PublishReadyToRun>true</PublishReadyToRun>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<InvariantGlobalization>true</InvariantGlobalization>
+		<PublishAot>false</PublishAot>
+		<PublishReadyToRun>true</PublishReadyToRun>
+		<UserSecretsId>82e79a46-afec-4e95-869e-331f8f5fab41</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-		<ProjectReference Include="..\..\AspNetCore\Extensions\AspNetCore.Extensions.csproj" />
-		<ProjectReference Include="..\..\AspNetCore\Logging\Logging\AspNetCore.Logging.csproj" />
-		<ProjectReference Include="..\..\AspNetCore\Authentication\Authentication\AspNetCore.Authentication.csproj" />
-    <ProjectReference Include="..\..\Authentication\OpenIdConnect\Keycloak\Authentication.OpenIdConnect.Keycloak.csproj" />
-		<ProjectReference Include="..\..\Configuration\Configuration\Configuration.csproj" />
-    <ProjectReference Include="..\..\AspNetCore\CORS\AspNetCore.CORS.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="../../../.Net-Toolkit/src/AspNetCore\Authentication\Authentication\AspNetCore.Authentication.csproj"/>
+		<ProjectReference Include="../../../.Net-Toolkit/src/AspNetCore\Authorization\Authorization\AspNetCore.Authorization.csproj"/>
+		<ProjectReference Include="../../../.Net-Toolkit/src/AspNetCore\CORS\AspNetCore.CORS.csproj"/>
+		<ProjectReference Include="../../../.Net-Toolkit/src/AspNetCore\Extensions\AspNetCore.Extensions.csproj"/>
+		<ProjectReference Include="../../../.Net-Toolkit/src/Authentication\OpenIdConnect\Keycloak\Authentication.OpenIdConnect.Keycloak.csproj"/>
+		<ProjectReference Include="../../../.Net-Toolkit/src/Configuration\Configuration\Configuration.csproj"/>
+		<ProjectReference Include="../../../.Net-Toolkit/src/Logging\AspNetCore\Serilog\Logging.AspNetCore.Serilog.csproj"/>
+		<ProjectReference Include="../../../.Net-Toolkit/src/Logging\Bootstrap\Serilog\Logging.Bootstrap.Serilog.csproj"/>
+	</ItemGroup>
 </Project>

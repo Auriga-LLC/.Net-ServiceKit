@@ -1,8 +1,7 @@
-using Auriga.Servicekit.AspNetCore.Authentication.Abstractions;
-using Auriga.Servicekit.AspNetCore.Authentication.Abstractions.Configuration;
-using Auriga.Servicekit.AspNetCore.Authentication.Abstractions.Models;
-using Auriga.Servicekit.Authentication.OpenIdConnect;
-using Auriga.Servicekit.Http.Abstractions.Enums;
+using Auriga.Servicekit.AuthenticationService.Domain.Models;
+using Auriga.Toolkit.AspNetCore.Authentication;
+using Auriga.Toolkit.Authentication.OpenIdConnect;
+using Auriga.Toolkit.Http;
 
 namespace Auriga.Servicekit.AuthenticationService.Domain.Extensions;
 

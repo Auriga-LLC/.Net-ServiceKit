@@ -1,5 +1,5 @@
-using Auriga.Toolkit.AuthenticationService.Extensions;
-using Auriga.Toolkit.Clients.Http.Abstractions;
+using Auriga.Servicekit.AuthenticationService.Extensions;
+using Auriga.Toolkit.Clients.Http;
 using Auriga.Toolkit.Plugins;
 
 namespace Auriga.Servicekit.AuthenticationService.Plugins;
