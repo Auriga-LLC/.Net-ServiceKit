@@ -52,6 +52,8 @@ services:
     command: start-dev --import-realm
     volumes:
       - "./realms/realm.json:/opt/keycloak/data/import/realm.json"
+    networks:
+      - servicekit-network
 
   shared_db:
     image: postgres:16
@@ -91,8 +93,8 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: "Docker"
       DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE: false
-      AppSettings__HTTP__Authentication__Connection__Authority: "http://keycloak:8080/realms/Example-Realm"
-      AppSettings__Integration__IdentityService__Endpoint: "http://keycloak:8080"
+      HTTP__Authentication__AuthorityConnection__PublicEndpoint: "http://localhost:8080/"
+      HTTP__Authentication__AuthorityConnection__InternalEndpoint: "http://keycloak:8080/"
       Kestrel_Endpoints_Http_Url: "http://+:80"
     ports:
       - "5005:80"
