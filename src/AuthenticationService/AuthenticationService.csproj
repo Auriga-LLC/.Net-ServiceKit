@@ -7,13 +7,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="../../../.Net-Toolkit/src/AspNetCore\Authentication\Authentication\AspNetCore.Authentication.csproj"/>
-		<ProjectReference Include="../../../.Net-Toolkit/src/AspNetCore\Authorization\Authorization\AspNetCore.Authorization.csproj"/>
-		<ProjectReference Include="../../../.Net-Toolkit/src/AspNetCore\CORS\AspNetCore.CORS.csproj"/>
-		<ProjectReference Include="../../../.Net-Toolkit/src/AspNetCore\Extensions\AspNetCore.Extensions.csproj"/>
-		<ProjectReference Include="../../../.Net-Toolkit/src/Authentication\OpenIdConnect\Keycloak\Authentication.OpenIdConnect.Keycloak.csproj"/>
-		<ProjectReference Include="../../../.Net-Toolkit/src/Configuration\Configuration\Configuration.csproj"/>
-		<ProjectReference Include="../../../.Net-Toolkit/src/Logging\AspNetCore\Serilog\Logging.AspNetCore.Serilog.csproj"/>
-		<ProjectReference Include="../../../.Net-Toolkit/src/Logging\Bootstrap\Serilog\Logging.Bootstrap.Serilog.csproj"/>
+		<PackageReference Include="AurigaLLC.Toolkit.AspNetCore.Authentication" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.AspNetCore.Authorization" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.AspNetCore.CORS" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.AspNetCore.Extensions" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.Authentication.OpenIdConnect.Keycloak" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.Configuration" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.Logging.Bootstrap.Serilog" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.Logging.AspNetCore.Serilog" Version="0.0.1"/>
 	</ItemGroup>
 </Project>
