@@ -1,4 +1,5 @@
 using Auriga.Servicekit.AuthenticationService.Extensions;
+using Auriga.Servicekit.AuthenticationService.Providers;
 using Auriga.Toolkit.Clients.Http;
 using Auriga.Toolkit.Plugins;
 
@@ -20,7 +21,8 @@ internal sealed class AuthenticationServicePlugin : FeaturePlugin, IServiceConfi
 	{
 		return services
 			.ConfigureHttpJsonOptions(options => options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default))
-			.AddTransient<IUserPasswordExchangerService, UserPasswordExchangerService>();
+			.AddTransient<IUserPasswordExchangerService, UserPasswordExchangerService>()
+			.AddTransient<IRedirectUrlProvider, RedirectUrlProvider>();
 	}
 
 	/// <inheritdoc/>

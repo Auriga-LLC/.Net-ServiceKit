@@ -8,6 +8,7 @@ using Auriga.Servicekit.AuthenticationService.Domain.Extensions;
 using Auriga.Toolkit.Http;
 using Auriga.Toolkit.Logging;
 using Auriga.Toolkit.Runtime;
+using Auriga.Servicekit.AuthenticationService.Providers;
 
 namespace Auriga.Servicekit.AuthenticationService.Controllers;
 
@@ -24,17 +25,18 @@ internal sealed class AuthenticationController
 	internal static async ValueTask<IResult> RedirectToLogin(
 		ILogger<AuthenticationController> logger,
 		IOpenIdConnectAuthenticationService provider,
+		IRedirectUrlProvider urlProvider,
 		HttpContext context,
 		[FromQuery] string state)
 	{
 		// Return back url for UI
-		Uri? redirectUri = context.Request.GetAuthenticationHandlerUri();
-		if (redirectUri == null)
+		Uri? tokenExchangeUri = urlProvider.GetTokenIssuerUri(context.Request.Headers, state);
+		if (tokenExchangeUri == null)
 		{
-			return Results.BadRequest(nameof(redirectUri));
+			return Results.BadRequest(nameof(tokenExchangeUri));
 		}
 
-		OperationContext<string> result = await provider.GetLoginPageUrlAsync(redirectUri, state);
+		OperationContext<string> result = await provider.GetLoginPageUrlAsync(tokenExchangeUri, state);
 		if (result.Result == null)
 		{
 			logger.LogMethodFailedWithErrors(nameof(provider.GetLoginPageUrlAsync), result.Errors);
@@ -99,8 +101,10 @@ internal sealed class AuthenticationController
 		ILogger<AuthenticationController> logger,
 		IOptions<AuthenticationFeatureOptions> config,
 		IOpenIdConnectAuthenticationService provider,
+		IRedirectUrlProvider urlProvider,
 		HttpContext context,
-		[FromQuery] string code)
+		[FromQuery] string code,
+		[FromQuery] string state)
 	{
 		if (string.IsNullOrWhiteSpace(code))
 		{
@@ -108,13 +112,13 @@ internal sealed class AuthenticationController
 		}
 
 		// Return back url for UI
-		Uri? redirectUri = context.Request.GetAuthenticationHandlerUri();
-		if (redirectUri == null)
+		Uri? postLoginUri = urlProvider.GetPostLoginUri(context.Request.Headers, state);
+		if (postLoginUri == null)
 		{
-			return Results.BadRequest(nameof(redirectUri));
+			return Results.BadRequest(nameof(postLoginUri));
 		}
 
-		OperationContext<OpenIdConnectTokenResponseModel?> tokenExchangeOperation = await provider.ExchangeCodeForTokenAsync(redirectUri, code, context.RequestAborted);
+		OperationContext<OpenIdConnectTokenResponseModel?> tokenExchangeOperation = await provider.ExchangeCodeForTokenAsync(postLoginUri, code, context.RequestAborted);
 		if (tokenExchangeOperation.Result == null)
 		{
 			logger.LogMethodFailedWithErrors(nameof(provider.ExchangeCodeForTokenAsync), tokenExchangeOperation.Errors);
@@ -123,6 +127,7 @@ internal sealed class AuthenticationController
 
 		if (tokenExchangeOperation.IsSucceed)
 		{
+			context.Response.Headers.Location = postLoginUri.AbsoluteUri;
 			return context.Response.HandleReceivedToken(config.Value, tokenExchangeOperation.Result);
 		}
 
@@ -184,6 +189,7 @@ internal sealed class AuthenticationController
 		ILogger<AuthenticationController> logger,
 		IOptions<AuthenticationFeatureOptions> config,
 		IOpenIdConnectAuthenticationService provider,
+		IRedirectUrlProvider urlProvider,
 		HttpContext context,
 		SplitSecret userSplitSecret,
 		[FromQuery(Name = "redirect_uri")] Uri? redirectUri,
@@ -207,8 +213,8 @@ internal sealed class AuthenticationController
 		OperationContext result = await provider.LogoutAsync(userSplitSecret.RefreshToken, redirectUri, state, context.RequestAborted);
 		if (result.IsSucceed)
 		{
-			context.Response.Headers.Location = context.Request.GetRedirectUrl(redirectUri).AbsoluteUri;
-			context.Response.DeleteCookies(config.Value.CookiePolicy.RestrictionPaths);
+			context.Response.Headers.Location = urlProvider.GetPostLogoutUrl(context.Request.Headers, redirectUri)?.AbsoluteUri;
+			context.Response.DeleteCookies(config.Value.CookiePolicy?.RestrictionPaths);
 			return Results.NoContent();
 		}
 
@@ -231,6 +237,7 @@ internal sealed class AuthenticationController
 		ILogger<AuthenticationController> logger,
 		IOptions<AuthenticationFeatureOptions> config,
 		IOpenIdConnectAuthenticationService provider,
+		IRedirectUrlProvider urlProvider,
 		HttpContext context,
 		SplitSecret userSplitSecret,
 		[FromQuery(Name = "redirect_uri")] Uri? redirectUri)
@@ -243,8 +250,8 @@ internal sealed class AuthenticationController
 		OperationContext result = await provider.RevokeClientSessionAsync(userSplitSecret.RefreshToken, context.RequestAborted);
 		if (result.IsSucceed)
 		{
-			context.Response.Headers.Location = context.Request.GetRedirectUrl(redirectUri).AbsoluteUri;
-			context.Response.DeleteCookies(config.Value.CookiePolicy.RestrictionPaths);
+			context.Response.Headers.Location = urlProvider.GetPostLogoutUrl(context.Request.Headers, redirectUri)?.AbsoluteUri;
+			context.Response.DeleteCookies(config.Value.CookiePolicy?.RestrictionPaths);
 			return Results.NoContent();
 		}
 
