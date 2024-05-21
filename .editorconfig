@@ -258,7 +258,7 @@ dotnet_diagnostic.CA2016.severity = error
 dotnet_diagnostic.CA1812.severity = suggestion
 
 # Use the LoggerMessage delegates
-dotnet_diagnostic.CA1848.severity = error
+dotnet_diagnostic.CA1848.severity = warning
 
 # Possible multiple enumerations of IEnumerable collection
 dotnet_diagnostic.CA1851.severity = error
