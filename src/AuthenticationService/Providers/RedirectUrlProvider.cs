@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Auriga.Servicekit.AuthenticationService.Domain.Enums;
 using Auriga.Toolkit.Configuration;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
@@ -53,7 +54,7 @@ internal sealed partial class RedirectUrlProvider(
 		}
 
 		return string.IsNullOrWhiteSpace(redirectUrl?.ToString())
-			? new Uri(referer)
+			? new Uri(referer!)
 			: new Uri(new Uri(referer!), redirectUrl);
 	}
 }

@@ -1,4 +1,5 @@
 using Auriga.Servicekit.AuthenticationService.Controllers;
+using Auriga.Servicekit.AuthenticationService.Domain.Enums;
 
 namespace Auriga.Servicekit.AuthenticationService.Extensions;
 

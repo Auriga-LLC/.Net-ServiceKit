@@ -1,3 +1,4 @@
+using Auriga.Servicekit.AuthenticationService.Domain.Enums;
 using Auriga.Servicekit.AuthenticationService.Extensions;
 using Auriga.Servicekit.AuthenticationService.Providers;
 using Auriga.Toolkit.Clients.Http;
@@ -27,10 +28,8 @@ internal sealed class AuthenticationServicePlugin : FeaturePlugin, IServiceConfi
 
 	/// <inheritdoc/>
 	public IEndpointRouteBuilder ConfigureRouting(IEndpointRouteBuilder endpoints)
-	{
-		return endpoints.MapGroup(RouteConstants.AuthControllerRoot)
+		=> endpoints.MapGroup(RouteConstants.AuthControllerRoot)
 			.MapAuthenticationApi();
-	}
 }
 
 internal class UserPasswordExchangerService : IUserPasswordExchangerService

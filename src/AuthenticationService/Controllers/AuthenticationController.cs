@@ -118,10 +118,10 @@ internal sealed class AuthenticationController
 			return Results.BadRequest(nameof(postLoginUri));
 		}
 
-		var issUrl = urlProvider.GetTokenIssuerUri(context.Request.Headers, state);
-		logger.LogWarning(issUrl.AbsoluteUri);
-
-		OperationContext<OpenIdConnectTokenResponseModel?> tokenExchangeOperation = await provider.ExchangeCodeForTokenAsync(issUrl, code, context.RequestAborted);
+		OperationContext<OpenIdConnectTokenResponseModel?> tokenExchangeOperation = await provider.ExchangeCodeForTokenAsync(
+			urlProvider.GetTokenIssuerUri(context.Request.Headers, state),
+			code,
+			context.RequestAborted);
 		if (tokenExchangeOperation.Result == null)
 		{
 			logger.LogMethodFailedWithErrors(nameof(provider.ExchangeCodeForTokenAsync), tokenExchangeOperation.Errors);
