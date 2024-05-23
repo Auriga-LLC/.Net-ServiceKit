@@ -3,7 +3,6 @@ using Auriga.Servicekit.AuthenticationService.Domain.Enums;
 using Auriga.Toolkit.Configuration;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
-using UrlCombineLib;
 
 namespace Auriga.Servicekit.AuthenticationService.Providers;
 
@@ -43,8 +42,12 @@ internal sealed partial class RedirectUrlProvider(
 			referer = configuration.GetConfiguration<string>("Application:PublicEndpoint");
 		}
 
-		return new Uri(referer)
-			.Combine(RouteConstants.AuthControllerRoot, RouteConstants.RequestToken);
+		return new Uri(
+			string.Concat(
+				referer.ToString().AsSpan().TrimEnd('/'),
+				"/".AsSpan(),
+				RouteConstants.AuthControllerRoot.TrimStart('/').AsSpan(),
+				RouteConstants.RequestToken.TrimStart('/').AsSpan()));
 	}
 
 	/// <inheritdoc/>

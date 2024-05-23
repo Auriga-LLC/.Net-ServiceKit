@@ -15,6 +15,5 @@
 		<PackageReference Include="AurigaLLC.Toolkit.Configuration" Version="0.0.1"/>
 		<PackageReference Include="AurigaLLC.Toolkit.Logging.Bootstrap.Serilog" Version="0.0.1"/>
 		<PackageReference Include="AurigaLLC.Toolkit.Logging.AspNetCore.Serilog" Version="0.0.1"/>
-		<PackageReference Include="UrlCombine" Version="2.0.0"/>
 	</ItemGroup>
 </Project>
