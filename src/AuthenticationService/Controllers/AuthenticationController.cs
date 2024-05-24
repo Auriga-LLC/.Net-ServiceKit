@@ -9,6 +9,7 @@ using Auriga.Toolkit.Http;
 using Auriga.Toolkit.Logging;
 using Auriga.Toolkit.Runtime;
 using Auriga.Servicekit.AuthenticationService.Providers;
+using Auriga.Servicekit.AuthenticationService.Domain.Models;
 
 namespace Auriga.Servicekit.AuthenticationService.Controllers;
 
@@ -146,21 +147,21 @@ internal sealed class AuthenticationController
 	/// <param name="config">App configuration options.</param>
 	/// <param name="provider">AuthProvider service client.</param>
 	/// <param name="context">Current HTTP context.</param>
-	/// <param name="userSplitSecret">Users secret.</param>
+	/// <param name="userSecret">Users secret.</param>
 	/// <returns>Splitted token secret.</returns>
 	internal static async Task<IResult> RefreshTokenAsync(
 		ILogger<AuthenticationController> logger,
 		IOptions<AuthenticationFeatureOptions> config,
 		IOpenIdConnectAuthenticationService provider,
 		HttpContext context,
-		SplitSecret userSplitSecret)
+		RefreshTokenSecret userSecret)
 	{
-		if (string.IsNullOrWhiteSpace(userSplitSecret.RefreshToken))
+		if (string.IsNullOrWhiteSpace(userSecret.RefreshToken))
 		{
 			return Results.Unauthorized();
 		}
 
-		OperationContext<OpenIdConnectTokenResponseModel?> tokenRefreshOperation = await provider.ExchangeRefreshTokenAsync(userSplitSecret.RefreshToken, context.RequestAborted);
+		OperationContext<OpenIdConnectTokenResponseModel?> tokenRefreshOperation = await provider.ExchangeRefreshTokenAsync(userSecret.RefreshToken, context.RequestAborted);
 		if (tokenRefreshOperation.Result == null)
 		{
 			logger.LogMethodFailedWithErrors(nameof(provider.ExchangeRefreshTokenAsync), tokenRefreshOperation.Errors);

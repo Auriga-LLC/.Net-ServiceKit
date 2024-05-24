@@ -13,10 +13,8 @@ internal static class RouteGroupBuilderExtensions
 
 		_ = routeGroup.MapGet(RouteConstants.RequestToken, AuthenticationController.RequestTokenAsync);
 
-		_ = routeGroup.MapGet(RouteConstants.RefreshToken, AuthenticationController.RefreshTokenAsync)
-			.RequireAuthorization();
-		_ = routeGroup.MapPost(RouteConstants.RefreshToken, AuthenticationController.RefreshTokenAsync)
-			.RequireAuthorization();
+		_ = routeGroup.MapGet(RouteConstants.RefreshToken, AuthenticationController.RefreshTokenAsync);
+		_ = routeGroup.MapPost(RouteConstants.RefreshToken, AuthenticationController.RefreshTokenAsync);
 
 		_ = routeGroup.MapGet(RouteConstants.Logout, AuthenticationController.LogoutAsync)
 			.RequireAuthorization();
