@@ -37,17 +37,18 @@ internal sealed partial class RedirectUrlProvider(
 			logger.LogWarning("Missing header Referer");
 		}
 
-		if(string.IsNullOrWhiteSpace(referer))
+		if (!string.IsNullOrWhiteSpace(referer))
 		{
-			referer = configuration.GetConfiguration<string>("Application:PublicEndpoint");
+			return new Uri(referer.ToString().Split('?')[0]);
 		}
 
-		return new Uri(
-			string.Concat(
-				referer.ToString().AsSpan().TrimEnd('/'),
-				"/".AsSpan(),
-				RouteConstants.AuthControllerRoot.TrimStart('/').AsSpan(),
-				RouteConstants.RequestToken.TrimStart('/').AsSpan()));
+		referer = configuration.GetConfiguration<string>("Application:PublicEndpoint");
+			return new Uri(
+				string.Concat(
+					referer.ToString().AsSpan().TrimEnd('/'),
+					"/".AsSpan(),
+					RouteConstants.AuthControllerRoot.TrimStart('/').AsSpan(),
+					RouteConstants.RequestToken.TrimStart('/').AsSpan()));
 	}
 
 	/// <inheritdoc/>
