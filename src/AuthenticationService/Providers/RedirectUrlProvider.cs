@@ -24,9 +24,14 @@ internal sealed partial class RedirectUrlProvider(
 		if(string.IsNullOrWhiteSpace(referer))
 		{
 			referer = UrlRegex().Replace(state, "${url}", 1);
+			return new Uri(referer!);
 		}
 
-		return new Uri(referer!);
+		return new Uri(
+			string.Concat(
+				referer.ToString().AsSpan().TrimEnd('/'),
+				"/".AsSpan(),
+				RouteConstants.RequestToken.TrimStart('/').AsSpan()));
 	}
 
 	/// <inheritdoc/>
@@ -47,7 +52,6 @@ internal sealed partial class RedirectUrlProvider(
 				string.Concat(
 					referer.ToString().AsSpan().TrimEnd('/'),
 					"/".AsSpan(),
-					RouteConstants.AuthControllerRoot.TrimStart('/').AsSpan(),
 					RouteConstants.RequestToken.TrimStart('/').AsSpan()));
 	}
 
