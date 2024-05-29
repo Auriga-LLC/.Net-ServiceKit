@@ -21,7 +21,7 @@ internal sealed partial class RedirectUrlProvider(
 			logger.LogWarning("Missing header Referer");
 		}
 
-		referer = !string.IsNullOrWhiteSpace(referer) ? referer : UrlRegex().Replace(state, "${url}", 1);
+		referer = !string.IsNullOrWhiteSpace(referer) ? referer.ToString().Split('?')[0] : UrlRegex().Replace(state, "${url}", 1);
 		logger.LogWarning("Referer:{0} in postLogin", referer);
 		return new Uri(
 			string.Concat(
