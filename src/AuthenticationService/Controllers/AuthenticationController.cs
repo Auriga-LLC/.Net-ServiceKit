@@ -119,12 +119,8 @@ internal sealed class AuthenticationController
 			return Results.BadRequest(nameof(postLoginUri));
 		}
 
-		var redirect_uri = urlProvider.GetTokenIssuerUri(context.Request.Headers, state);
-
-		logger.LogInformation("Using redirect_uri", redirect_uri);
-
 		OperationContext<OpenIdConnectTokenResponseModel?> tokenExchangeOperation = await provider.ExchangeCodeForTokenAsync(
-			redirect_uri,
+			postLoginUri,
 			code,
 			context.RequestAborted);
 		if (tokenExchangeOperation.Result == null)
