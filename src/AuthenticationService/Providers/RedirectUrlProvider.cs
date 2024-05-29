@@ -22,12 +22,7 @@ internal sealed partial class RedirectUrlProvider(
 		}
 
 		referer = !string.IsNullOrWhiteSpace(referer) ? referer.ToString().Split('?')[0] : UrlRegex().Replace(state, "${url}", 1);
-		referer = string.Concat(
-			referer.ToString().AsSpan().TrimEnd('/'),
-			"/".AsSpan(),
-			RouteConstants.RequestToken.TrimStart('/').AsSpan());
-		logger.LogWarning("Referer in postLogin :{0}", referer);
-		return new Uri(referer);
+		return new Uri(referer.ToString().TrimEnd('/'));
 	}
 
 	/// <inheritdoc/>
