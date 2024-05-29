@@ -22,12 +22,12 @@ internal sealed partial class RedirectUrlProvider(
 		}
 
 		referer = !string.IsNullOrWhiteSpace(referer) ? referer.ToString().Split('?')[0] : UrlRegex().Replace(state, "${url}", 1);
-		logger.LogWarning("Referer:{0} in postLogin", referer);
-		return new Uri(
-			string.Concat(
-				referer.ToString().AsSpan().TrimEnd('/'),
-				"/".AsSpan(),
-				RouteConstants.RequestToken.TrimStart('/').AsSpan()));
+		referer = string.Concat(
+			referer.ToString().AsSpan().TrimEnd('/'),
+			"/".AsSpan(),
+			RouteConstants.RequestToken.TrimStart('/').AsSpan());
+		logger.LogWarning("Referer in postLogin :{0}", referer);
+		return new Uri(referer);
 	}
 
 	/// <inheritdoc/>
@@ -38,13 +38,13 @@ internal sealed partial class RedirectUrlProvider(
 			logger.LogWarning("Missing header Referer");
 		}
 
-		referer = !string.IsNullOrWhiteSpace(referer) ? referer : configuration.GetConfiguration<string>("Application:PublicEndpoint");
-		logger.LogWarning("Referer in token:{0}", referer);
-		return new Uri(
-			string.Concat(
-				referer.ToString().AsSpan().TrimEnd('/'),
-				"/".AsSpan(),
-				RouteConstants.RequestToken.TrimStart('/').AsSpan()));
+		referer = !string.IsNullOrWhiteSpace(referer) ? referer.ToString().Split('?')[0] : configuration.GetConfiguration<string>("Application:PublicEndpoint");
+		referer = string.Concat(
+			referer.ToString().AsSpan().TrimEnd('/'),
+			"/".AsSpan(),
+			RouteConstants.RequestToken.TrimStart('/').AsSpan());
+		logger.LogWarning("Referer in tokenIssuer :{0}", referer);
+		return new Uri(referer);
 	}
 
 	/// <inheritdoc/>
