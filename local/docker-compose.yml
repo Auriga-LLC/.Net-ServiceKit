@@ -1,0 +1,123 @@
+version: "3.6"
+services:
+  redis:
+    image: redis:7.0.5
+    container_name: "redis-cache"
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 1s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: 0.25
+          memory: 96M
+        reservations:
+          cpus: 0.5
+          memory: 64M
+    networks:
+      - servicekit-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.2
+    container_name: keycloak_web
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://shared_db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+
+      KC_LOG_LEVEL: info
+
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    depends_on:
+      - shared_db
+    ports:
+      - 8080:8080
+    deploy:
+      resources:
+        limits:
+          cpus: 0.75
+          memory: 512M
+        reservations:
+          cpus: 0.25
+          memory: 256M
+    command: start-dev --import-realm
+    volumes:
+      - "./realms/realm.json:/opt/keycloak/data/import/realm.json"
+    networks:
+      - servicekit-network
+
+  shared_db:
+    image: postgres:16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    deploy:
+      resources:
+        limits:
+          cpus: 0.50
+          memory: 128M
+        reservations:
+          cpus: 0.25
+          memory: 128M
+    networks:
+      - servicekit-network
+
+  authservice:
+    image: servicekit/api:authservice
+    container_name: "authservice"
+    build:
+      dockerfile: ./local/Service.Dockerfile
+      context: ../
+      args:
+        - PROJECT_NAME=AuthenticationService
+    entrypoint: ["dotnet", "Toolkit.Extensions.AuthenticationService.dll"]
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      shared_db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Docker"
+      DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE: false
+      HTTP__Authentication__AuthorityConnection__PublicEndpoint: "http://localhost:8080/"
+      HTTP__Authentication__AuthorityConnection__InternalEndpoint: "http://keycloak:8080/"
+      Kestrel_Endpoints_Http_Url: "http://+:80"
+    ports:
+      - "5005:80"
+    deploy:
+      resources:
+        limits:
+          cpus: 0.50
+          memory: 192M
+        reservations:
+          cpus: 0.25
+          memory: 128M
+    healthcheck:
+      test: [ "CMD-SHELL", "weet --spider --tries=1 --no-verbose http://localhost/healthz || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - servicekit-network
+
+volumes:
+  postgres_data: {}
+
+networks:
+  servicekit-network:
+    driver: bridge
+    external: false

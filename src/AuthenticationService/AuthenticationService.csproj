@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<InvariantGlobalization>true</InvariantGlobalization>
+		<PublishAot>false</PublishAot>
+		<PublishReadyToRun>true</PublishReadyToRun>
+		<UserSecretsId>82e79a46-afec-4e95-869e-331f8f5fab41</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AurigaLLC.Toolkit.AspNetCore.Authentication" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.AspNetCore.Authorization" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.AspNetCore.CORS" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.AspNetCore.Extensions" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.Authentication.OpenIdConnect.Keycloak" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.Configuration" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.Logging.Bootstrap.Serilog" Version="0.0.1"/>
+		<PackageReference Include="AurigaLLC.Toolkit.Logging.AspNetCore.Serilog" Version="0.0.1"/>
+	</ItemGroup>
+</Project>

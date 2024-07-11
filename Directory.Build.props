@@ -1,0 +1,57 @@
+<Project>
+	<!-- Devtime related properties -->
+	<PropertyGroup>
+		<DotNetVersionUsed>8</DotNetVersionUsed>
+		<DotNetFrameworkPackagesVersion>$(DotNetVersionUsed).0.0</DotNetFrameworkPackagesVersion>
+
+		<RootProductNamespace>Auriga.Servicekit</RootProductNamespace>
+		<RootNamespace>$(RootProductNamespace).$(MsBuildProjectName)</RootNamespace>
+
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+		<IsTestProject Condition=" $(MsBuildProjectName.EndsWith('.Tests')) ">true</IsTestProject>
+		<IsPackable Condition=" '$(IsTestProject)' == 'true' ">false</IsPackable>
+
+		<AnalysisLevel>$(DotNetVersionUsed).0</AnalysisLevel>
+		<AnalysisMode>All</AnalysisMode>
+		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+
+		<NoWarn>CA1802</NoWarn>
+
+		<IsTrimmable>false</IsTrimmable>
+	</PropertyGroup>
+
+	<ItemGroup Condition=" '${IsTestProject)' == '' ">
+		<PackageReference Include="roslynator.analyzers" Version="4.12.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="roslynator.codeanalysis.analyzers" Version="4.12.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="roslynator.formatting.analyzers" Version="4.12.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<!-- Nuget package related properties -->
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+
+		<TargetFramework>net$(DotNetVersionUsed).0</TargetFramework>
+
+		<EnablePackageValidation>true</EnablePackageValidation>
+		<AssemblyName>$(RootNamespace)</AssemblyName>
+		<PackageId>$(RootNamespace)</PackageId>
+		<IncludeSymbols>false</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+		<AssemblyVersion>$(Version)</AssemblyVersion>
+		<Version>0.0.1</Version>
+		<FileVersion>$(Version)</FileVersion>
+	</PropertyGroup>
+</Project>
